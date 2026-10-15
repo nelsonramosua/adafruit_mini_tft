@@ -1,0 +1,4 @@
+dependencies:
+  nelsonramosua/adafruit_mini_tft:
+    version: "*"
+    override_path: "../../../"

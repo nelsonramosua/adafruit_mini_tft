@@ -1,0 +1,36 @@
+menu "Panel test"
+
+    choice TEST_TFT_REV
+        prompt "Board revision (mark on the back of the TFT flex)"
+        default TEST_TFT_REV_B
+        config TEST_TFT_REV_A
+            bool "Rev A (before 2023)"
+        config TEST_TFT_REV_B
+            bool "Rev B (2023 and later)"
+    endchoice
+
+    config TEST_TFT_ROTATION
+        int "Rotation (Adafruit numbering, 0-3)"
+        range 0 3
+        default 1
+
+    config TEST_PIN_MOSI
+        int "MOSI"
+        default 19
+    config TEST_PIN_SCLK
+        int "SCK"
+        default 21
+    config TEST_PIN_CS
+        int "TFT_CS"
+        default 22
+    config TEST_PIN_DC
+        int "D/C"
+        default 23
+    config TEST_PIN_RST
+        int "RST (-1 if not wired)"
+        default -1
+    config TEST_PIN_LITE
+        int "Lite (-1 if not wired)"
+        default 11
+
+endmenu

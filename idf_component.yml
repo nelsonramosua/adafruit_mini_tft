@@ -1,0 +1,29 @@
+version: "0.1.0"
+description: "Driver for the Adafruit Mini TFT 0.96\" 160x80 breakout (rev A and B): esp_lcd ST7735S panel, PWM backlight, sleep, rotation and 5x7 text"
+license: "MIT"
+maintainers:
+  - "Nelson Ramos"
+tags:
+  - display
+  - lcd
+  - adafruit
+  - st7735
+  - esp_lcd
+url: "https://github.com/nelsonramosua/adafruit_mini_tft"
+repository: "https://github.com/nelsonramosua/adafruit_mini_tft.git"
+issues: "https://github.com/nelsonramosua/adafruit_mini_tft/issues"
+documentation: "https://github.com/nelsonramosua/adafruit_mini_tft#readme"
+# Only validated on the ESP32-C6 so far; widen after testing other chips
+targets:
+  - esp32c6
+files:
+  exclude:
+    - "**/.cache/**/*"
+    - "**/build/**"
+    - "**/sdkconfig"
+    - "**/sdkconfig.old"
+    - "**/dependencies.lock"
+dependencies:
+  idf: ">=5.4"
+examples:
+  - path: examples/panel_test

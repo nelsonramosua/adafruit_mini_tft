@@ -1,0 +1,17 @@
+# ESP-IDF build output
+build/
+managed_components/
+sdkconfig
+sdkconfig.old
+dependencies.lock
+
+# Editors / language servers
+.cache/
+.vscode/
+compile_commands.json
+*.swp
+*~
+.DS_Store
+
+# Component manager pack output
+dist/

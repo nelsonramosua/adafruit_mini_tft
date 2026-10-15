@@ -1,0 +1,1 @@
+idf_component_register(SRCS "panel_test.c" PRIV_REQUIRES esp_driver_spi)
