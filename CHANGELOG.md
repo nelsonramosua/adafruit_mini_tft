@@ -5,7 +5,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
-## [0.1.0] - 2026-10-16
+## [0.1.1] - 2026-10-15
+
+### Added
+
+- CI: example build on ESP-IDF 5.4, 5.5, 6.0 and 6.1, plus a registry package
+  check; automatic publishing on `v*` tags.
+- `CONTRIBUTING.md`, issue and pull request templates.
+- README: registry and build badges, installation and contributing sections.
+
+## [0.1.0] - 2026-10-15
 
 ### Added
 

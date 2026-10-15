@@ -1,4 +1,4 @@
-version: "0.1.0"
+version: "0.1.1"
 description: "Driver for the Adafruit Mini TFT 0.96\" 160x80 breakout (rev A and B): esp_lcd ST7735S panel, PWM backlight, sleep, rotation and 5x7 text"
 license: "MIT"
 maintainers:
