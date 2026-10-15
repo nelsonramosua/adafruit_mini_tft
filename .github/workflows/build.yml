@@ -1,0 +1,41 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  example:
+    name: panel_test / IDF ${{ matrix.idf }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Oldest supported (idf_component.yml: idf >= 5.4) up to the newest release branch
+        idf: [release-v5.4, release-v5.5, release-v6.0, release-v6.1]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build examples/panel_test (esp32c6)
+        uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: ${{ matrix.idf }}
+          target: esp32c6
+          path: examples/panel_test
+          command: idf.py build
+
+  package:
+    name: Registry package check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Pack component (validates idf_component.yml and file list)
+        uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: release-v6.1
+          target: esp32c6
+          path: .
+          command: compote component pack --name adafruit_mini_tft --dest-dir /tmp/dist

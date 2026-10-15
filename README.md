@@ -1,5 +1,8 @@
 # adafruit_mini_tft
 
+[![Component Registry](https://components.espressif.com/components/nelsonramosua/adafruit_mini_tft/badge.svg)](https://components.espressif.com/components/nelsonramosua/adafruit_mini_tft)
+[![Build](https://github.com/nelsonramosua/adafruit_mini_tft/actions/workflows/build.yml/badge.svg)](https://github.com/nelsonramosua/adafruit_mini_tft/actions/workflows/build.yml)
+
 ESP-IDF driver for the **Adafruit Mini TFT 0.96" 160x80** breakout ([product 3533](https://learn.adafruit.com/adafruit-mini-tft-0-dot-96-inch-180x60-breakout)).
 
 Developed by Nelson Ramos for the *Dispositivos Conectados* (DC) course, under the supervision of Prof. Dr. Paulo Bartolomeu.
@@ -98,6 +101,17 @@ Built and tested on ESP-IDF 6.1 / ESP32-C6.
 
 Validated on hardware (ESP32-C6-DevKitC-1, Rev B breakout, ESP-IDF 6.1):
 offsets, colours, text, all four rotations, backlight PWM and sleep/wake.
+
+## Installation
+
+```sh
+idf.py add-dependency "nelsonramosua/adafruit_mini_tft^0.1.0"
+```
+
+## Contributing
+
+Bug reports, hardware results (other chips, Rev A boards) and pull requests are welcome. 
+See [CONTRIBUTING.md](CONTRIBUTING.md) and [CHANGELOG.md](CHANGELOG.md).
 
 ## Credits
 

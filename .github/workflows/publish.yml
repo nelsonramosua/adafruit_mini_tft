@@ -1,0 +1,25 @@
+name: Publish to ESP Component Registry
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tag must match idf_component.yml version
+        run: |
+          manifest=$(sed -n 's/^version: *"\{0,1\}\([^"]*\)"\{0,1\}$/\1/p' idf_component.yml)
+          tag="${GITHUB_REF_NAME#v}"
+          echo "manifest=$manifest tag=$tag"
+          test "$manifest" = "$tag"
+
+      - name: Upload
+        uses: espressif/upload-components-ci-action@v2
+        with:
+          components: "adafruit_mini_tft:."
+          namespace: "nelsonramosua"
+          api_token: ${{ secrets.IDF_COMPONENT_API_TOKEN }}

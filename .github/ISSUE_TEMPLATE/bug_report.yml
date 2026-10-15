@@ -1,0 +1,38 @@
+name: Bug report
+description: Something is wrong on the display or the driver misbehaves
+labels: [bug]
+body:
+  - type: dropdown
+    id: revision
+    attributes:
+      label: Breakout revision
+      description: Letter in a circle on the back of the TFT flex
+      options: ["Rev A", "Rev B", "Not sure"]
+    validations:
+      required: true
+  - type: input
+    id: idf
+    attributes:
+      label: ESP-IDF version
+      placeholder: "e.g. v6.1"
+    validations:
+      required: true
+  - type: input
+    id: target
+    attributes:
+      label: Target chip / board
+      placeholder: "e.g. ESP32-C6-DevKitC-1"
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happens
+      description: Which examples/panel_test step fails, and what you see (a photo helps)
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Serial log
+      render: text
