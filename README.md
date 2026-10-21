@@ -106,7 +106,7 @@ offsets, colours, text, all four rotations, backlight PWM and sleep/wake.
 ## Installation
 
 ```sh
-idf.py add-dependency "nelsonramosua/adafruit_mini_tft^0.1.0"
+idf.py add-dependency "nelsonramosua/adafruit_mini_tft^0.2.0"
 ```
 
 ## Contributing
