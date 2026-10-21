@@ -271,6 +271,26 @@ fail:
 
 /* --------------------------------------------------------------- control */
 
+esp_err_t adafruit_mini_tft_reinit(adafruit_mini_tft_handle_t tft)
+{
+    ESP_RETURN_ON_FALSE(tft, ESP_ERR_INVALID_ARG, TAG, "invalid handle");
+    xSemaphoreTake(tft->lock, portMAX_DELAY);
+    esp_err_t err = esp_lcd_panel_reset(tft->panel);  /* RST not wired: SWRESET */
+    if (err == ESP_OK) err = esp_lcd_panel_init(tft->panel);
+    if (err == ESP_OK) err = esp_lcd_panel_invert_color(tft->panel, tft->rev->invert);
+    if (err == ESP_OK) err = apply_rotation(tft, tft->cfg.rotation);
+    if (err == ESP_OK) err = fill_rect_locked(tft, 0, 0, tft->width, tft->height, ADAFRUIT_MINI_TFT_BLACK);
+    if (err == ESP_OK) err = esp_lcd_panel_disp_on_off(tft->panel, true);
+    if (err == ESP_OK) {
+        tft->sleeping = false;
+        if (tft->bl_ready) {
+            backlight_write(tft, tft->backlight);
+        }
+    }
+    xSemaphoreGive(tft->lock);
+    return err;
+}
+
 esp_err_t adafruit_mini_tft_set_rotation(adafruit_mini_tft_handle_t tft, adafruit_mini_tft_rotation_t rot)
 {
     ESP_RETURN_ON_FALSE(tft, ESP_ERR_INVALID_ARG, TAG, "invalid handle");

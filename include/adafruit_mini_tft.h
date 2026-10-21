@@ -107,6 +107,13 @@ esp_err_t adafruit_mini_tft_set_backlight(adafruit_mini_tft_handle_t tft, uint8_
  */
 esp_err_t adafruit_mini_tft_sleep(adafruit_mini_tft_handle_t tft, bool sleep);
 
+/**
+ * Initialise the controller again (software reset, init sequence, rotation, cleared screen, display on), keeping the handle. 
+ * For when the panel may have lost power while the MCU did not: e.g. a microSD card inserted in the slot of the same breakout draws a current spike that can reset the ST7735, which then stays blank. 
+ * The panel ends awake; the caller redraws (and puts it back to sleep if it was).
+ */
+esp_err_t adafruit_mini_tft_reinit(adafruit_mini_tft_handle_t tft);
+
 /* Drawing (blocking, thread-safe, clipped to the screen) */
 esp_err_t adafruit_mini_tft_fill(adafruit_mini_tft_handle_t tft, uint16_t color);
 esp_err_t adafruit_mini_tft_fill_rect(adafruit_mini_tft_handle_t tft, int x, int y, int w, int h, uint16_t color);
