@@ -29,8 +29,8 @@ extern "C" {
 
 /** Board revision, see the "A"/"B" mark on the back of the TFT flex. */
 typedef enum {
-    ADAFRUIT_MINI_TFT_REV_A,  /**< before Jan 2023: larger chip, BGR, not inverted, offset 24/0 */
-    ADAFRUIT_MINI_TFT_REV_B,  /**< since Jan 2023:  plug-in FPC, RGB, inverted, offset 26/1 */
+    ADAFRUIT_MINI_TFT_REV_A,  /**< before Jan 2023: larger chip, not inverted, offset 24/0 (RGB element order on the wire; Adafruit's library calls it "BGR", see adafruit_mini_tft.c) */
+    ADAFRUIT_MINI_TFT_REV_B,  /**< since Jan 2023:  plug-in FPC, inverted, offset 26/1 (BGR element order on the wire) */
 } adafruit_mini_tft_rev_t;
 
 /** Same numbering as Adafruit_ST7735::setRotation(). */
@@ -106,6 +106,14 @@ esp_err_t adafruit_mini_tft_set_backlight(adafruit_mini_tft_handle_t tft, uint8_
  * false: sleep-out (120 ms) + backlight back to the last level.
  */
 esp_err_t adafruit_mini_tft_sleep(adafruit_mini_tft_handle_t tft, bool sleep);
+
+/**
+ * Initialise the controller again (software reset, init sequence, rotation, cleared screen, display on), keeping the handle. 
+ * For when the panel may have lost power while the MCU did not: e.g. a microSD card inserted in the slot of the same breakout draws a current spike that can reset the ST7735, which then stays blank. 
+ * The panel ends as it was: awake, or asleep with the backlight off (it does not light up for a moment). 
+ * The caller redraws.
+ */
+esp_err_t adafruit_mini_tft_reinit(adafruit_mini_tft_handle_t tft);
 
 /* Drawing (blocking, thread-safe, clipped to the screen) */
 esp_err_t adafruit_mini_tft_fill(adafruit_mini_tft_handle_t tft, uint16_t color);

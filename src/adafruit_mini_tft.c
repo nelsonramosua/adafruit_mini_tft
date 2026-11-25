@@ -90,9 +90,13 @@ static inline uint16_t to_wire(uint16_t color)
 /* draw_bitmap is asynchronous: wait until the buffer may be reused */
 static esp_err_t blit(adafruit_mini_tft_handle_t tft, int x0, int y0, int x1, int y1)
 {
+    xSemaphoreTake(tft->tx_done, 0);  /* a completion left over from a transfer that timed out must not stand for this one */
     ESP_RETURN_ON_ERROR(esp_lcd_panel_draw_bitmap(tft->panel, x0, y0, x1, y1, tft->buf), TAG, "draw");
     if (xSemaphoreTake(tft->tx_done, pdMS_TO_TICKS(TX_TIMEOUT_MS)) != pdTRUE) {
+        /* The bus was held (e.g. a slow SD card): the transfer is still queued and reads the buffer. 
+         * Wait for it before anyone writes the buffer again */
         ESP_LOGE(TAG, "transfer timeout");
+        xSemaphoreTake(tft->tx_done, pdMS_TO_TICKS(4 * TX_TIMEOUT_MS));
         return ESP_ERR_TIMEOUT;
     }
     return ESP_OK;
@@ -270,6 +274,29 @@ fail:
 }
 
 /* --------------------------------------------------------------- control */
+
+esp_err_t adafruit_mini_tft_reinit(adafruit_mini_tft_handle_t tft)
+{
+    ESP_RETURN_ON_FALSE(tft, ESP_ERR_INVALID_ARG, TAG, "invalid handle");
+    xSemaphoreTake(tft->lock, portMAX_DELAY);
+    const bool was_sleeping = tft->sleeping;
+    esp_err_t err = esp_lcd_panel_reset(tft->panel);  /* RST not wired: SWRESET */
+    if (err == ESP_OK) err = esp_lcd_panel_init(tft->panel);
+    if (err == ESP_OK) err = esp_lcd_panel_invert_color(tft->panel, tft->rev->invert);
+    if (err == ESP_OK) err = apply_rotation(tft, tft->cfg.rotation);
+    if (err == ESP_OK) err = fill_rect_locked(tft, 0, 0, tft->width, tft->height, ADAFRUIT_MINI_TFT_BLACK);
+    if (err == ESP_OK) err = esp_lcd_panel_disp_on_off(tft->panel, true);
+    if (err == ESP_OK && was_sleeping) {
+        err = esp_lcd_panel_disp_sleep(tft->panel, true);  /* stays asleep, and dark: no flash of the backlight */
+    } else if (err == ESP_OK) {
+        tft->sleeping = false;
+        if (tft->bl_ready) {
+            backlight_write(tft, tft->backlight);
+        }
+    }
+    xSemaphoreGive(tft->lock);
+    return err;
+}
 
 esp_err_t adafruit_mini_tft_set_rotation(adafruit_mini_tft_handle_t tft, adafruit_mini_tft_rotation_t rot)
 {

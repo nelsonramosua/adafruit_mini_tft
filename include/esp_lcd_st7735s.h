@@ -39,8 +39,9 @@ typedef struct {
     uint16_t                      init_cmds_size;
 } st7735s_vendor_config_t;
 
-/** Datasheet serial write cycle is >= 66 ns (~15 MHz). */
-#define ST7735S_SPI_PCLK_HZ_DEFAULT   (15 * 1000 * 1000)
+/** Datasheet serial write cycle is >= 66 ns (~15 MHz). 
+ *  The SPI clock is an integer divider of 80 MHz on the C6 and the closest one is picked: 15 MHz would give 80/5 = 16 MHz (62.5 ns), 13 MHz gives 80/6 = 13.3 MHz (75 ns). */
+#define ST7735S_SPI_PCLK_HZ_DEFAULT   (13 * 1000 * 1000)
 
 /** Convenience SPI panel IO config (8-bit commands and parameters, mode 0). */
 #define ST7735S_PANEL_IO_SPI_CONFIG(cs, dc, cb, cb_ctx) \

@@ -79,6 +79,7 @@ typedef struct {
     uint8_t                       colmod_val;
     const st7735s_lcd_init_cmd_t *init_cmds;
     uint16_t                      init_cmds_size;
+    TickType_t                    slpin_at;  /* when SLPIN was sent: SLPOUT must wait 120 ms after it */
 } st7735s_panel_t;
 
 static esp_err_t tx_param(st7735s_panel_t *p, int cmd, const void *data, size_t len)
@@ -203,7 +204,17 @@ static esp_err_t panel_disp_on_off(esp_lcd_panel_t *panel, bool on)
 static esp_err_t panel_disp_sleep(esp_lcd_panel_t *panel, bool sleep)
 {
     st7735s_panel_t *p = __containerof(panel, st7735s_panel_t, base);
+    if (!sleep) {
+        /* Datasheet: 120 ms between SLPIN and SLPOUT (a wake-up right after the panel was put to sleep would leave it blank) */
+        const TickType_t since = xTaskGetTickCount() - p->slpin_at;
+        if (since < pdMS_TO_TICKS(ST7735S_SLPOUT_DELAY_MS)) {
+            vTaskDelay(pdMS_TO_TICKS(ST7735S_SLPOUT_DELAY_MS) - since);
+        }
+    }
     ESP_RETURN_ON_ERROR(tx_param(p, sleep ? LCD_CMD_SLPIN : LCD_CMD_SLPOUT, NULL, 0), TAG, "sleep");
+    if (sleep) {
+        p->slpin_at = xTaskGetTickCount();
+    }
     vTaskDelay(pdMS_TO_TICKS(sleep ? ST7735S_SLPIN_DELAY_MS : ST7735S_SLPOUT_DELAY_MS));
     return ESP_OK;
 }
