@@ -15,6 +15,7 @@ It drives the whole module, not just the display controller:
 | Rotation 0-3 | Same numbering as `Adafruit_ST7735::setRotation()` |
 | PWM backlight | LEDC on the `Lite` pin, can keep running in light sleep |
 | Low-power sleep | Backlight off + controller sleep-in (RAM is kept; wake takes 120 ms) |
+| Recovery | `adafruit_mini_tft_reinit()`: the panel can reset when a microSD card is inserted in the same breakout (the MCU keeps running, the screen stays blank); this brings it back without a new handle |
 | Drawing | Fill, rectangles, 5x7 text (scale 1-5): blocking and thread-safe |
 | `esp_lcd` underneath | Shares the SPI bus with the breakout's microSD slot, uses DMA, works with LVGL |
 

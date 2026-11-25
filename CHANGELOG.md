@@ -5,6 +5,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-21
+
+### Added
+
+- `adafruit_mini_tft_reinit()`: software reset and init sequence again, keeping the handle, rotation and backlight. 
+  Inserting a microSD card in the breakout's slot can reset the ST7735 while the MCU keeps running, and the panel then stays blank with the backlight on; call it after mounting the card. 
+  Validated on ESP32-C6-DevKitC-1 with a Rev B breakout.
+
 ## [0.1.1] - 2026-10-15
 
 ### Added
